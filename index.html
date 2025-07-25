@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Earned Vacation Calculator</title>
+    <title>Earned Vacation Hours Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,12 +49,15 @@
 </head>
 <body>
     <div class="calculator">
-        <h2>PTO Calculator</h2>
+        <h2><img src="https://github.com/wtravis923/inpwrcalculator/blob/main/logo.png">Earned Vacation Hours Calculator</h2>
+	<body>This calculator provides an estimate of how many vacation hours a team member will have earned by their anniversary date during the transition year, September 2025 - August 2026. <br><br>
+	<span style="color: red;">This calculator is not an accurate representation of how much vacation time you currently have available. Check BambooHR for that information.</span></body>
+	<br><br>
 
         <div class="form-group">
             <label for="vacation-allotment">Current Annual Vacation Allotment:</label>
             <select id="vacation-allotment" onchange="calculatePTO()">
-                <option value="">Select vacation allotment</option>
+                <option value="">Select your vacation allotment</option>
                 <option value="0.77">1 week</option>
                 <option value="1.54">2 weeks</option>
                 <option value="2.31">3 weeks</option>
@@ -62,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label for="anniversary-date">Select Your InPwr Anniversary Date:</label>
+            <label for="anniversary-date">Next InPwr Anniversary Date:</label>
             <input type="date" id="anniversary-date" 
                    min="2025-09-01" max="2026-08-31" 
                    onchange="calculatePTO()">
@@ -74,14 +77,15 @@
                 <span id="accrual-rate">0</span> hours
             </div>
             <div class="result-item">
-                <strong>Projected Accrued Hours by Anniversary:</strong> 
+                <strong>Projected Earned Hours by Anniversary:</strong> 
                 <span id="accrued-hours">0</span> hours
             </div>
             <div class="result-item">
-                <strong>Available Borrowed Hours:</strong> 
+                <strong>Available Hours to Borrow*:</strong> 
                 <span id="borrowed-hours">0</span> hours
             </div>
-        </div>
+        </div><br>
+	<body><i>*In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance. This ensures 	fairness and maintains the integrity of our PTO policy.</i></body>
     </div>
 
     <script>
