@@ -45,19 +45,44 @@
         .result-item {
             margin-bottom: 10px;
         }
+
+        .language-toggle {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .language-btn {
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .language-btn.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <h2>Earned Vacation Hours Calculator</h2>
-	<body>This calculator provides an estimate of how many vacation hours a team member will have earned by their anniversary date during the transition year, September 2025 - August 2026. <br><br>
-	<span style="color: red;">This calculator is not an accurate representation of how much vacation time you currently have available. Check BambooHR for that information.</span></body>
-	<br><br>
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="changeLanguage('en')">English</button>
+            <button class="language-btn" onclick="changeLanguage('es')">Español</button>
+        </div>
+
+        <h2 id="calculator-title">Earned Vacation Hours Calculator</h2>
+        <p id="calculator-description">This calculator provides an estimate of how many vacation hours a team member will have earned by their anniversary date during the transition year, September 2025 - August 2026.</p>
+        <p id="bamboo-warning" style="color: red;">This calculator is not an accurate representation of how much vacation time you currently have available. Check BambooHR for that information.</p>
+        <br>
 
         <div class="form-group">
-            <label for="vacation-allotment">Current Annual Vacation Allotment:</label>
+            <label id="vacation-label" for="vacation-allotment">Current Annual Vacation Allotment:</label>
             <select id="vacation-allotment" onchange="calculatePTO()">
-                <option value="">Select your vacation allotment</option>
+                <option value="" id="select-option">Select your vacation allotment</option>
                 <option value="0.77">1 week</option>
                 <option value="1.54">2 weeks</option>
                 <option value="2.31">3 weeks</option>
@@ -65,7 +90,7 @@
         </div>
 
         <div class="form-group">
-            <label for="anniversary-date">Next InPwr Anniversary Date:</label>
+            <label id="anniversary-label" for="anniversary-date">Next InPwr Anniversary Date:</label>
             <input type="date" id="anniversary-date" 
                    min="2025-09-01" max="2026-08-31" 
                    onchange="calculatePTO()">
@@ -73,22 +98,75 @@
 
         <div class="results">
             <div class="result-item">
-                <strong>Weekly Accrual Rate:</strong> 
-                <span id="accrual-rate">0</span> hours
+                <strong id="accrual-label">Weekly Accrual Rate:</strong> 
+                <span id="accrual-rate">0</span> <span id="hours-text">hours</span>
             </div>
             <div class="result-item">
-                <strong>Projected Earned Hours by Anniversary:</strong> 
-                <span id="accrued-hours">0</span> hours
+                <strong id="earned-label">Projected Earned Hours by Anniversary:</strong> 
+                <span id="accrued-hours">0</span> <span id="hours-text2">hours</span>
             </div>
             <div class="result-item">
-                <strong>Available Hours to Borrow*:</strong> 
-                <span id="borrowed-hours">0</span> hours
+                <strong id="borrow-label">Available Hours to Borrow*:</strong> 
+                <span id="borrowed-hours">0</span> <span id="hours-text3">hours</span>
             </div>
-        </div><br>
-	<body><i>*In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance. This ensures 	fairness and maintains the integrity of our PTO policy.</i></body>
+        </div>
+        <br>
+        <p id="footnote" style="font-style: italic;">*In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance. This ensures fairness and maintains the integrity of our PTO policy.</p>
     </div>
 
     <script>
+        const translations = {
+            en: {
+                title: "Earned Vacation Hours Calculator",
+                description: "This calculator provides an estimate of how many vacation hours a team member will have earned by their anniversary date during the transition year, September 2025 - August 2026.",
+                bambooWarning: "This calculator is not an accurate representation of how much vacation time you currently have available. Check BambooHR for that information.",
+                vacationLabel: "Current Annual Vacation Allotment:",
+                selectOption: "Select your vacation allotment",
+                anniversaryLabel: "Next InPwr Anniversary Date:",
+                accrualLabel: "Weekly Accrual Rate:",
+                earnedLabel: "Projected Earned Hours by Anniversary:",
+                borrowLabel: "Available Hours to Borrow*:",
+                hours: "hours",
+                footnote: "*In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance. This ensures fairness and maintains the integrity of our PTO policy."
+            },
+            es: {
+                title: "Calculadora de Horas de Vacaciones Ganadas",
+                description: "Esta calculadora proporciona un estimado de cuántas horas de vacaciones habrá ganado un miembro del equipo en su fecha de aniversario durante el año de transición, septiembre 2025 - agosto 2026.",
+                bambooWarning: "Esta calculadora no es una representación precisa del tiempo de vacaciones que tiene disponible actualmente. Consulte BambooHR para obtener esa información.",
+                vacationLabel: "Asignación Anual Actual de Vacaciones:",
+                selectOption: "Seleccione su asignación de vacaciones",
+                anniversaryLabel: "Próxima Fecha de Aniversario en InPwr:",
+                accrualLabel: "Tasa de Acumulación Semanal:",
+                earnedLabel: "Horas Proyectadas Ganadas para el Aniversario:",
+                borrowLabel: "Horas Disponibles para Préstamo*:",
+                hours: "horas",
+                footnote: "*En caso de que el empleo de un miembro del equipo con InPwr termine antes de ganar completamente las horas de vacaciones prestadas, será responsable de reembolsar a la empresa el saldo pendiente. Esto asegura la equidad y mantiene la integridad de nuestra política de PTO."
+            }
+        };
+
+        function changeLanguage(lang) {
+            // Update button states
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.language-btn[onclick*="${lang}"]`).classList.add('active');
+
+            // Update text content
+            document.getElementById('calculator-title').textContent = translations[lang].title;
+            document.getElementById('calculator-description').textContent = translations[lang].description;
+            document.getElementById('bamboo-warning').textContent = translations[lang].bambooWarning;
+            document.getElementById('vacation-label').textContent = translations[lang].vacationLabel;
+            document.getElementById('select-option').textContent = translations[lang].selectOption;
+            document.getElementById('anniversary-label').textContent = translations[lang].anniversaryLabel;
+            document.getElementById('accrual-label').textContent = translations[lang].accrualLabel;
+            document.getElementById('earned-label').textContent = translations[lang].earnedLabel;
+            document.getElementById('borrow-label').textContent = translations[lang].borrowLabel;
+            document.getElementById('hours-text').textContent = translations[lang].hours;
+            document.getElementById('hours-text2').textContent = translations[lang].hours;
+            document.getElementById('hours-text3').textContent = translations[lang].hours;
+            document.getElementById('footnote').textContent = translations[lang].footnote;
+        }
+
         function calculatePTO() {
             const accrualRate = parseFloat(document.getElementById('vacation-allotment').value) || 0;
             const anniversaryDate = new Date(document.getElementById('anniversary-date').value);
@@ -117,4 +195,3 @@
         }
     </script>
 </body>
-</html>
