@@ -73,6 +73,32 @@
             -webkit-appearance: none;
         }
 
+        .notice-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+    
+        .notice-box.warning {
+            background-color: #fff8f8;
+            border-left-color: #dc3545;
+        }
+    
+        .notice-icon {
+            color: #6c757d;
+            margin-right: 8px;
+        }
+    
+        .notice-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
         
     </style>
 </head>
@@ -121,7 +147,14 @@
             </div>
         </div>
         <br>
-        <p id="footnote" style="font-style: italic;"><b>*In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance. This ensures fairness and maintains the integrity of our vacation policy.</b></p>
+        <div class="notice-box">
+            <div class="notice-title">
+                <span class="notice-icon">ⓘ</span>Important Note:
+            </div>
+            <div>
+            In the event that a team member's employment with InPwr ends prior to fully earning any borrowed vacation hours, they will be responsible for reimbursing the company for the outstanding balance.
+            </div>
+        </div>
     </div>
 
     <script>
